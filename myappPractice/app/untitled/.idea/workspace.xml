@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="13bfe45f-9f2a-424d-abe3-bc47f294863a" name="변경" comment="">
+      <change afterPath="$PROJECT_DIR$/../../../myapp/app/src/main/java/bitcamp/myapp/App.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../myapp/app/src/main/java/bitcamp/myapp/command/BoardCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../myapp/app/src/main/java/bitcamp/myapp/command/ProjectCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../myapp/app/src/main/java/bitcamp/myapp/command/UserCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../myapp/app/src/main/java/bitcamp/myapp/util/ArrayList.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../myapp/app/src/main/java/bitcamp/myapp/util/LinkedList.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../myapp/app/src/main/java/bitcamp/myapp/util/List.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../myapp/app/src/main/java/bitcamp/myapp/util/Node.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../myapp/app/src/main/java/bitcamp/myapp/util/Prompt.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../myapp/app/src/main/java/bitcamp/myapp/vo/Board.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../myapp/app/src/main/java/bitcamp/myapp/vo/Project.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../myapp/app/src/main/java/bitcamp/myapp/vo/User.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../myapp/app/src/main/resources/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../myapp/app/src/test/java/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../myapp/app/src/test/java/Score.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../myapp/app/src/test/java/Test.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../myapp/app/src/test/resources/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../untitled/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../untitled/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../untitled/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../untitled/.idea/vcs.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2i8QLLwd9vxWCyYaO6uOdgl31Io" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/bitcam/git/bitcamp-mystudy/myappPractice&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="애플리케이션 수준" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="디폴트 작업">
+      <changelist id="13bfe45f-9f2a-424d-abe3-bc47f294863a" name="변경" comment="" />
+      <created>1718869669056</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1718869669056</updated>
+    </task>
+    <servers />
+  </component>
+</project>
