@@ -2,31 +2,28 @@ import java.util.Scanner;
 
 public class Main {
   public static void main(String[] args) {
-    System.out.println("+++++++++++++++++++++++++++++++++++++++++++++");
-    Scanner sc = new Scanner(System.in);
+    Scanner scanner = new Scanner(System.in);
+    boolean run = true;
+    int speed = 0;
 
-    System.out.print("1. 자동번호 생성 횟수: ");
-    int cycle = sc.nextInt();
-    int[] arr = new int[7];
-    int m = 0;
+    while (run) {
+      System.out.println("---------------------------");
+      System.out.println("1. 증속 | 2. 감속 | 3. 중지");
+      System.out.println("---------------------------");
+      System.out.print("선택: ");
 
-    while (cycle > 0) {
-      for (int i = 0; i < arr.length; i++) {
-        arr[i] = (int) (Math.random() * 45) + 1;
+      String strNum = scanner.nextLine();
 
-        for (int j = 0; j < i; j++) {
-          if (arr[i] == arr[j]) {
-            i--;
-          }
-        }
+      if (strNum.equals("1")) {
+        speed++;
+        System.out.println("현재 속도 = " + speed);
+      } else if (strNum.equals("2")) {
+        speed--;
+        System.out.println("현재 속도 = " + speed);
+      } else if (strNum.equals("3")) {
+        run = false;
       }
-      for (int  i =0; i < arr.length - 1; i++) {
-        System.out.printf("%5d", arr[i]);
-      }
-      System.out.printf("   +%5d", arr[6]);
-      System.out.println();
-      cycle--;
     }
-    System.out.println("++++++++++++++++++++++++++++++++++++++++++++++");
+    System.out.println("프로그램 종료");
   }
 }

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 *.exe
 temp/
 
@@ -559,5 +560,10 @@ gradle-app.setting
 *.hprof
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,visualstudiocode,eclipse,intellij,java,c,c++,node,gradle,maven
+=======
+# Ignore Gradle project-specific cache directory
+.gradle
+
+>>>>>>> b6c381ccb66c1b54d36f05e0c9003f39bdf80af1
 # Ignore Gradle build output directory
 build

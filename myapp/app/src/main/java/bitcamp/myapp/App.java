@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package main.java.bitcamp.myapp;
 
 import bitcamp.myapp.command.BoardCommand;
@@ -104,3 +105,10 @@ public class App {
     }
   }
 }
+=======
+public class App {
+    public static void main(String[] args) {
+        System.out.println("hie");
+    }
+}
+>>>>>>> b6c381ccb66c1b54d36f05e0c9003f39bdf80af1
