@@ -1,50 +1,27 @@
 package bitcamp.myapp.command;
 
-import bitcamp.myapp.util.LinkedList;
+import bitcamp.myapp.util.List;
 import bitcamp.myapp.util.Prompt;
 import bitcamp.myapp.vo.Board;
 import java.util.Date;
 
-public class BoardCommand implements Command {
+public class BoardCommand extends AbstractCommand {
 
-  String menuTitle;
-  String[] menus = {"등록", "목록", "조회", "변경", "삭제"};
+  private List boardList;
+  private String[] menus = {"등록", "목록", "조회", "변경", "삭제", "검색"};
 
-  LinkedList boardList = new LinkedList();
-
-  public BoardCommand(String menuTitle) {
-    this.menuTitle = menuTitle;
+  public BoardCommand(String menuTitle, List list) {
+    super(menuTitle);
+    this.boardList = list;
   }
 
-  public void execute() {
-    printMenus();
-
-    while (true) {
-      String command = Prompt.input(String.format("메인/%s>", menuTitle));
-      if (command.equals("menu")) {
-        printMenus();
-        continue;
-      } else if (command.equals("9")) { // 이전 메뉴 선택
-        return;
-      }
-
-      try {
-        int menuNo = Integer.parseInt(command);
-        String menuName = getMenuTitle(menuNo);
-        if (menuName == null) {
-          System.out.println("유효한 메뉴 번호가 아닙니다.");
-          continue;
-        }
-
-        processMenu(menuName);
-
-      } catch (NumberFormatException ex) {
-        System.out.println("숫자로 메뉴 번호를 입력하세요.");
-      }
-    }
+  @Override
+  protected String[] getMenus() {
+    return menus;
   }
 
-  private void processMenu(String menuName) {
+  @Override
+  protected void processMenu(String menuName) {
     System.out.printf("[%s]\n", menuName);
     switch (menuName) {
       case "등록":
@@ -64,23 +41,6 @@ public class BoardCommand implements Command {
         break;
     }
   }
-
-  private String getMenuTitle(int menuNo) {
-    return isValidateMenu(menuNo) ? menus[menuNo - 1] : null;
-  }
-
-  private boolean isValidateMenu(int menuNo) {
-    return menuNo >= 1 && menuNo <= menus.length;
-  }
-
-  private void printMenus() {
-    System.out.printf("[%s]\n", menuTitle);
-    for (int i = 0; i < menus.length; i++) {
-      System.out.printf("%d. %s\n", (i + 1), menus[i]);
-    }
-    System.out.println("9. 이전");
-  }
-
 
   private void deleteBoard() {
     int boardNo = Prompt.inputInt("게시글 번호?");

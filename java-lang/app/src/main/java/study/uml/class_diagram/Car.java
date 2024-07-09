@@ -2,12 +2,16 @@ package study.uml.class_diagram;
 
 public class Car {
 
-	Engine engine;
 	Insurance insuarance;
 	Navigation navigation;
+	Engine engine;
 
 	public Car(Engine engine) {
 		this.engine = engine;
+	}
+
+	public Engine getEngine() {
+		return engine;
 	}
 
 	public Insurance getInsurance() {

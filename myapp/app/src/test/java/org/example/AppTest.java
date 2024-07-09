@@ -3,7 +3,7 @@
  */
 package org.example;
 
-<<<<<<< HEAD
+import bitcamp.myapp.App;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,14 +11,5 @@ class AppTest {
     @Test void appHasAGreeting() {
         App classUnderTest = new App();
         assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
-=======
-import org.junit.Test;
-import static org.junit.Assert.*;
-
-public class AppTest {
-    @Test public void appHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull("app should have a greeting", classUnderTest.getGreeting());
->>>>>>> b6c381ccb66c1b54d36f05e0c9003f39bdf80af1
     }
 }
