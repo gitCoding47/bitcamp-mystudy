@@ -42,6 +42,5 @@ public class Test01 {
 		// 5) 람다2
 		Player p4 = () -> System.out.println("5555");
 		p4.play();
-
 	}
 }

@@ -24,19 +24,30 @@ import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.Project;
 import bitcamp.myapp.vo.User;
 import bitcamp.util.Prompt;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 public class App {
 
 
     MenuGroup mainMenu = new MenuGroup("메인");
 
+    List<User> userList = new ArrayList<>();
+    List<Project> projectList = new LinkedList<>();
+    List<Board> boardList = new LinkedList<>();
+
     public App() {
-        List<User> userList = new ArrayList<>();
-        List<Project> projectList = new LinkedList<>();
-        List<Board> boardList = new LinkedList<>();
+
+        loadData();
 
         MenuGroup userMenu = new MenuGroup("회원");
         userMenu.add(new MenuItem("등록", new UserAddCommand(userList)));
@@ -80,12 +91,134 @@ public class App {
 
         try {
             mainMenu.execute();
+
         } catch (Exception ex) {
             System.out.println("실행 오류!");
+            ex.printStackTrace();
+
+        } finally {
+            saveData();
         }
 
         System.out.println("종료합니다.");
 
         Prompt.close();
+    }
+
+    private void loadData() {
+        loadUsers();
+        loadProjects();
+        loadBoards();
+        System.out.println("데이터를 로딩 했습니다.");
+    }
+
+    private void loadUsers() {
+        try (Scanner in = new Scanner(new FileReader("user.csv"))) {
+            while (true) {
+                try {
+                    String csv = in.nextLine();
+                    userList.add(User.valueOf(csv));
+                } catch (Exception e) {
+                    break;
+                }
+            }
+
+            int maxUserNo = 0;
+            for (User user : userList) {
+                if (user.getNo() > maxUserNo) {
+                    maxUserNo = user.getNo();
+                }
+            }
+
+            User.initSeqNo(maxUserNo);
+
+        } catch (IOException e) {
+            System.out.println("회원 정보 로딩 중 오류 발생!");
+            // e.printStackTrace();
+        }
+    }
+
+    private void loadProjects() {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("project.data"))) {
+
+            projectList = (List<Project>) in.readObject();
+
+            int maxProjectNo = 0;
+            for (Project project : projectList) {
+                if (project.getNo() > maxProjectNo) {
+                    maxProjectNo = project.getNo();
+                }
+            }
+
+            Project.initSeqNo(maxProjectNo);
+
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("프로젝트 정보 로딩 중 오류 발생!");
+            // e.printStackTrace();
+            projectList = new LinkedList<>();
+        }
+    }
+
+    private void loadBoards() {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("board.data"))) {
+
+            boardList = (List<Board>) in.readObject();
+
+            int maxBoardNo = 0;
+            for (Board board : boardList) {
+                if (board.getNo() > maxBoardNo) {
+                    maxBoardNo = board.getNo();
+                }
+            }
+
+            Board.initSeqNo(maxBoardNo);
+
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("게시글 정보 로딩 중 오류 발생!");
+            // e.printStackTrace();
+            boardList = new LinkedList<>();
+        }
+    }
+
+    private void saveData() {
+        saveUsers();
+        saveProjects();
+        saveBoards();
+        System.out.println("데이터를 저장 했습니다.");
+    }
+
+    private void saveUsers() {
+        try (FileWriter out = new FileWriter("user.csv")) {
+
+            for (User user : userList) {
+                out.write(user.toCsvString() + "\n");
+            }
+
+        } catch (IOException e) {
+            System.out.println("회원 정보 저장 중 오류 발생!");
+            e.printStackTrace();
+        }
+    }
+
+    private void saveProjects() {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("project.data"))) {
+
+            out.writeObject(projectList);
+
+        } catch (IOException e) {
+            System.out.println("프로젝트 정보 저장 중 오류 발생!");
+            e.printStackTrace();
+        }
+    }
+
+    private void saveBoards() {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("board.data"))) {
+
+            out.writeObject(boardList);
+
+        } catch (IOException e) {
+            System.out.println("게시글 정보 저장 중 오류 발생!");
+            e.printStackTrace();
+        }
     }
 }

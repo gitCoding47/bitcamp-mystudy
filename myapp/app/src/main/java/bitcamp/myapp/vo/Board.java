@@ -1,9 +1,10 @@
 package bitcamp.myapp.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-public class Board {
+public class Board implements Serializable {
 
   private static int seqNo;
 
@@ -14,7 +15,6 @@ public class Board {
   private int viewCount;
 
   public Board() {
-
   }
 
   public Board(int no) {
@@ -23,6 +23,14 @@ public class Board {
 
   public static int getNextSeqNo() {
     return ++seqNo;
+  }
+
+  public static void initSeqNo(int no) {
+    seqNo = no;
+  }
+
+  public static int getSeqNo() {
+    return seqNo;
   }
 
   @Override
