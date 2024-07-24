@@ -22,19 +22,22 @@ import bitcamp.myapp.command.user.UserUpdateCommand;
 import bitcamp.myapp.command.user.UserViewCommand;
 import bitcamp.myapp.vo.Board;
 import bitcamp.myapp.vo.Project;
+import bitcamp.myapp.vo.SequenceNo;
 import bitcamp.myapp.vo.User;
 import bitcamp.util.Prompt;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.*;
+import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 
 public class App {
 
@@ -106,119 +109,169 @@ public class App {
     }
 
     private void loadData() {
-        loadUsers();
-        loadProjects();
-        loadBoards();
+        loadJson(userList, "user.json", User.class);
+        loadJson(projectList, "project.json", Project.class);
+        loadJson(boardList, "board.json", Board.class);
+
         System.out.println("데이터를 로딩 했습니다.");
     }
 
-    private void loadUsers() {
-        try (Scanner in = new Scanner(new FileReader("user.csv"))) {
-            while (true) {
-                try {
-                    String csv = in.nextLine();
-                    userList.add(User.valueOf(csv));
-                } catch (Exception e) {
+    private <E> void loadJson(List<E> list, String filename, Class<E> elementType) {
+        try (BufferedReader in = new BufferedReader(new FileReader(filename))) {
+
+            StringBuilder strBuilder = new StringBuilder();
+            String line;
+            while ((line = in.readLine()) != null) {
+                strBuilder.append(line);
+            }
+
+            list.addAll((List<E>) new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .create()
+                .fromJson(
+                    strBuilder.toString(),
+                    TypeToken.getParameterized(List.class, elementType)));
+
+            // 읽어 들인 객체의 타입이 SequenceNo 구현체라면
+            // 일련 번호를 객체 식별 번호로 사용한다는 것이기 때문에
+            // 목록에 저장된 객체 중에서 가장 큰 일련 번호를 알아내서 클래스의 스태틱 필드에 설정해야 한다.
+            for (Class<?> type : elementType.getInterfaces()) {
+                if (type == SequenceNo.class) {
+                    initSeqNo(list, elementType);
                     break;
                 }
             }
 
-            int maxUserNo = 0;
-            for (User user : userList) {
-                if (user.getNo() > maxUserNo) {
-                    maxUserNo = user.getNo();
-                }
-            }
-
-            User.initSeqNo(maxUserNo);
-
-        } catch (IOException e) {
-            System.out.println("회원 정보 로딩 중 오류 발생!");
+        } catch (Exception e) {
+            System.out.printf("%s 파일 로딩 중 오류 발생!\n", filename);
             // e.printStackTrace();
         }
     }
 
-    private void loadProjects() {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("project.data"))) {
-
-            projectList = (List<Project>) in.readObject();
-
-            int maxProjectNo = 0;
-            for (Project project : projectList) {
-                if (project.getNo() > maxProjectNo) {
-                    maxProjectNo = project.getNo();
-                }
+    private <E> void initSeqNo(List<E> list, Class<E> elementType) throws Exception {
+        int maxSeqNo = 0;
+        for (Object element : list) {
+            SequenceNo seqObj = (SequenceNo) element;
+            if (seqObj.getNo() > maxSeqNo) {
+                maxSeqNo = seqObj.getNo();
             }
-
-            Project.initSeqNo(maxProjectNo);
-
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("프로젝트 정보 로딩 중 오류 발생!");
-            // e.printStackTrace();
-            projectList = new LinkedList<>();
         }
-    }
 
-    private void loadBoards() {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("board.data"))) {
-
-            boardList = (List<Board>) in.readObject();
-
-            int maxBoardNo = 0;
-            for (Board board : boardList) {
-                if (board.getNo() > maxBoardNo) {
-                    maxBoardNo = board.getNo();
-                }
-            }
-
-            Board.initSeqNo(maxBoardNo);
-
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("게시글 정보 로딩 중 오류 발생!");
-            // e.printStackTrace();
-            boardList = new LinkedList<>();
-        }
+        Method method = elementType.getMethod("initSeqNo", int.class);
+        method.invoke(null, maxSeqNo);
+        // 위 코드는 다음과 같다.
+        // 예) User.initSeqNo(maxSeqNo);
     }
 
     private void saveData() {
-        saveUsers();
-        saveProjects();
-        saveBoards();
-        System.out.println("데이터를 저장 했습니다.");
-    }
+        try {
+            XSSFWorkbook workbook = new XSSFWorkbook();
 
-    private void saveUsers() {
-        try (FileWriter out = new FileWriter("user.csv")) {
+            saveUsers(workbook);
+            saveBoards(workbook);
+            saveProjects(workbook);
 
-            for (User user : userList) {
-                out.write(user.toCsvString() + "\n");
+            try (FileOutputStream out = new FileOutputStream("data.xlsx")) {
+                workbook.write(null);
             }
+            System.out.println("데이터를 저장 했습니다.");
 
-        } catch (IOException e) {
-            System.out.println("회원 정보 저장 중 오류 발생!");
+        } catch (Exception e) {
+            System.out.println("데이터 저장 중 오류 발생!");
             e.printStackTrace();
         }
     }
 
-    private void saveProjects() {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("project.data"))) {
+    private void saveBoards(XSSFWorkbook workbook) {
+        XSSFSheet sheet = workbook.createSheet("boards");
 
-            out.writeObject(projectList);
+        // 셀 이름 출력
+        String[] cellHeaders = {"no", "title", "content", "created_date", "view_count"};
+        Row headerRow = sheet.createRow(0);
+        for (int i = 0; i < cellHeaders.length; i++) {
+            headerRow.createCell(i).setCellValue(cellHeaders[i]);
+        }
+
+        // 데이터 저장
+        for (int i = 0; i < boardList.size(); i++) {
+            Board board = boardList.get(i);
+            Row dataRow = sheet.createRow(i + 1);
+            dataRow.createCell(0).setCellValue(String.valueOf(board.getNo()));
+            dataRow.createCell(1).setCellValue(board.getTitle());
+            dataRow.createCell(2).setCellValue(board.getContent());
+
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            dataRow.createCell(3).setCellValue(board.getCreatedDate());
+
+            dataRow.createCell(4).setCellValue(String.valueOf(board.getViewCount()));
+        }
+    }
+
+    private void saveProjects(XSSFWorkbook workbook) {
+        XSSFSheet sheet = workbook.createSheet("projects");
+
+        // 셀 이름 출력
+        String[] cellHeaders = {"no", "title", "description", "start_date", "end_date", "members"};
+        Row headerRow = sheet.createRow(0);
+        for (int i = 0; i < cellHeaders.length; i++) {
+            headerRow.createCell(i).setCellValue(cellHeaders[i]);
+        }
+
+        // 데이터 저장
+        for (int i = 0; i < projectList.size(); i++) {
+            Project project = projectList.get(i);
+            Row dataRow = sheet.createRow(i + 1);
+            dataRow.createCell(0).setCellValue(String.valueOf(project.getNo()));
+            dataRow.createCell(1).setCellValue(project.getTitle());
+            dataRow.createCell(2).setCellValue(project.getDescription());
+            dataRow.createCell(3).setCellValue(project.getStartDate());
+            dataRow.createCell(4).setCellValue(project.getEndDate());
+
+            StringBuilder strBuilder = new StringBuilder();
+            for (User member : project.getMembers()) {
+                if (strBuilder.length() > 0) {
+                    strBuilder.append(",");
+                }
+                strBuilder.append(member.getNo());
+            }
+            dataRow.createCell(5).setCellValue(strBuilder.toString());
+        }
+    }
+
+    private void saveUsers(XSSFWorkbook workbook) {
+        XSSFSheet sheet = workbook.createSheet("users");
+
+        // 셀 이름 출력
+        String[] cellHeaders = {"no", "name", "email", "password", "tel"};
+        Row headerRow = sheet.createRow(0);
+        for (int i = 0; i < cellHeaders.length; i++) {
+            headerRow.createCell(i).setCellValue(cellHeaders[i]);
+        }
+
+        // 데이터 저장
+        for (int i = 0; i < userList.size(); i++) {
+            User user = userList.get(i);
+            Row dataRow = sheet.createRow(i + 1);
+            dataRow.createCell(0).setCellValue(String.valueOf(user.getNo()));
+            dataRow.createCell(1).setCellValue(user.getName());
+            dataRow.createCell(2).setCellValue(user.getEmail());
+            dataRow.createCell(3).setCellValue(user.getPassword());
+            dataRow.createCell(4).setCellValue(user.getTel());
+        }
+    }
+
+    private void saveJson(Object obj, String filename) {
+        try (FileWriter out = new FileWriter(filename)) {
+
+            out.write(new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .create()
+                .toJson(obj));
 
         } catch (IOException e) {
-            System.out.println("프로젝트 정보 저장 중 오류 발생!");
+            System.out.printf("%s 파일 저장 중 오류 발생!\n", filename);
             e.printStackTrace();
         }
     }
 
-    private void saveBoards() {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("board.data"))) {
-
-            out.writeObject(boardList);
-
-        } catch (IOException e) {
-            System.out.println("게시글 정보 저장 중 오류 발생!");
-            e.printStackTrace();
-        }
-    }
 }
