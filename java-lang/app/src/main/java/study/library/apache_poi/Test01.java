@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 public class Test01 {
 	public static void main(String[] args) throws Exception {
 		XSSFWorkbook workbook = new XSSFWorkbook();
+		workbook.createSheet("users");
 
 		try (FileOutputStream out = new FileOutputStream("temp/test.xlsx")) {
 			workbook.write(null);
