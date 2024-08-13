@@ -24,12 +24,12 @@ public class Board implements Serializable {
   @Override
   public String toString() {
     return "Board{" +
-        "no=" + no +
-        ", title='" + title + '\'' +
-        ", content='" + content + '\'' +
-        ", createdDate=" + createdDate +
-        ", viewCount=" + viewCount +
-        '}';
+            "no=" + no +
+            ", title='" + title + '\'' +
+            ", content='" + content + '\'' +
+            ", createdDate=" + createdDate +
+            ", viewCount=" + viewCount +
+            '}';
   }
 
   @Override
@@ -48,7 +48,7 @@ public class Board implements Serializable {
   public int hashCode() {
     return Objects.hashCode(no);
   }
-  
+
   public int getNo() {
     return no;
   }

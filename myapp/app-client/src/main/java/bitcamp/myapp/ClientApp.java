@@ -4,9 +4,6 @@ import bitcamp.context.ApplicationContext;
 import bitcamp.listener.ApplicationListener;
 import bitcamp.myapp.listener.InitApplicationListener;
 import bitcamp.util.Prompt;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,10 +32,9 @@ public class ClientApp {
   void execute() {
 
     try {
-
-      appCtx.setAttribute("url", "jdbc:mysql://localhost/studydb2"/*Prompt.input("DBMS URL?")*/);
-      appCtx.setAttribute("username", "study" /*Prompt.input("아이디?")*/);
-      appCtx.setAttribute("password", "1111" /*Prompt.input("암호?")*/);
+      appCtx.setAttribute("url", "jdbc:mysql://localhost/studydb"/*Prompt.input("DBMS URL?")*/);
+      appCtx.setAttribute("username", "study"/*Prompt.input("아이디?")*/);
+      appCtx.setAttribute("password", "1111"/*Prompt.input("암호?")*/);
 
       // 애플리케이션이 시작될 때 리스너에게 알린다.
       for (ApplicationListener listener : listeners) {
@@ -52,7 +48,7 @@ public class ClientApp {
       System.out.println("[프로젝트 관리 시스템]");
 
       appCtx.getMainMenu().execute();
-      
+
     } catch (Exception ex) {
       System.out.println("실행 오류!");
       ex.printStackTrace();
