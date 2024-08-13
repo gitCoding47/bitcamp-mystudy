@@ -36,8 +36,9 @@ public class ClientApp {
 
     try {
 
-      appCtx.setAttribute("host", Prompt.input("서버 주소?"));
-      appCtx.setAttribute("port", Prompt.inputInt("포트 번호?"));
+      appCtx.setAttribute("url", "jdbc:mysql://localhost/studydb2"/*Prompt.input("DBMS URL?")*/);
+      appCtx.setAttribute("username", "study" /*Prompt.input("아이디?")*/);
+      appCtx.setAttribute("password", "1111" /*Prompt.input("암호?")*/);
 
       // 애플리케이션이 시작될 때 리스너에게 알린다.
       for (ApplicationListener listener : listeners) {

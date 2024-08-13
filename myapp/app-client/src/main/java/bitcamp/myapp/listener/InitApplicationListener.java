@@ -25,27 +25,36 @@ import bitcamp.myapp.command.user.UserViewCommand;
 import bitcamp.myapp.dao.BoardDao;
 import bitcamp.myapp.dao.ProjectDao;
 import bitcamp.myapp.dao.UserDao;
-import bitcamp.myapp.dao.stub.BoardDaoStub;
-import bitcamp.myapp.dao.stub.ProjectDaoStub;
-import bitcamp.myapp.dao.stub.UserDaoStub;
+import bitcamp.myapp.dao.mysql.BoardDaoImpl;
+import bitcamp.myapp.dao.mysql.ProjectDaoImpl;
+import bitcamp.myapp.dao.mysql.UserDaoImpl;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 public class InitApplicationListener implements ApplicationListener {
 
-  UserDao userDao;
-  BoardDao boardDao;
-  ProjectDao projectDao;
+  private Connection con;
+  private UserDao userDao;
+  private BoardDao boardDao;
+  private ProjectDao projectDao;
 
   @Override
   public void onStart(ApplicationContext ctx) throws Exception {
 
-    String host = (String) ctx.getAttribute("host");
-    int port = (int) ctx.getAttribute("port");
+    String url = (String) ctx.getAttribute("url");
+    String username = (String) ctx.getAttribute("username");
+    String password = (String) ctx.getAttribute("password");
 
-    userDao = new UserDaoStub(host, port, "users");
-    boardDao = new BoardDaoStub(host, port, "boards");
-    projectDao = new ProjectDaoStub(host, port, "projects");
+    // 1) JDBC Connestion 객체 준비
+    // => BDMS에 연결
+    Connection con = DriverManager.getConnection(url, username, password);
+
+
+    userDao = new UserDaoImpl(con);
+    boardDao = new BoardDaoImpl(con);
+    projectDao = new ProjectDaoImpl(con);
 
     MenuGroup mainMenu = ctx.getMainMenu();
 
@@ -80,4 +89,14 @@ public class InitApplicationListener implements ApplicationListener {
 
     mainMenu.setExitMenuTitle("종료");
   }
+
+  @Override
+  public void onShutdown(ApplicationContext ctx) throws Exception {
+    try {
+      con.close();
+    } catch (Exception e) {
+      // DBMS에 연결을 끊는 중에 오류가 발생하면 그냥 무시한다!
+    }
+  }
+
 }
