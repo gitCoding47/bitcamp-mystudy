@@ -23,12 +23,12 @@ public class UserDaoImpl implements UserDao {
 
       // insert 문 전달
       stmt.executeUpdate(String.format(
-              "insert into myapp_users(name, email, pwd, tel)"
-                      + " values ('%s', '%s', sha1('%s'), '%s')",
-              user.getName(),
-              user.getEmail(),
-              user.getPassword(),
-              user.getTel()));
+          "insert into myapp_users(name, email, pwd, tel)"
+              + " values ('%s', '%s', sha1('%s'), '%s')",
+          user.getName(),
+          user.getEmail(),
+          user.getPassword(),
+          user.getTel()));
 
       return true;
     }
@@ -80,23 +80,45 @@ public class UserDaoImpl implements UserDao {
   }
 
   @Override
+  public User findByEmailAndPassword(String email, String password) throws Exception {
+    try (Statement stmt = con.createStatement();
+         ResultSet rs = stmt.executeQuery(String.format(
+             "select * from myapp_users where email='%s' and pwd=sha1('%s')",
+             email,
+             password))) {
+
+      if (rs.next()) {
+        User user = new User();
+        user.setNo(rs.getInt("user_id"));
+        user.setName(rs.getString("name"));
+        user.setEmail(rs.getString("email"));
+        user.setTel(rs.getString("tel"));
+
+        return user;
+      }
+
+      return null;
+    }
+  }
+
+  @Override
   public boolean update(User user) throws Exception {
     try (// SQL을 서버에 전달할 객체 준비
          Statement stmt = con.createStatement()) {
 
       // update 문 전달
       int count = stmt.executeUpdate(String.format(
-              "update myapp_users set"
-                      + " name='%s',"
-                      + " email='%s',"
-                      + " pwd=sha1('%s'),"
-                      + " tel='%s'"
-                      + " where user_id=%d",
-              user.getName(),
-              user.getEmail(),
-              user.getPassword(),
-              user.getTel(),
-              user.getNo()));
+          "update myapp_users set"
+              + " name='%s',"
+              + " email='%s',"
+              + " pwd=sha1('%s'),"
+              + " tel='%s'"
+              + " where user_id=%d",
+          user.getName(),
+          user.getEmail(),
+          user.getPassword(),
+          user.getTel(),
+          user.getNo()));
 
       return count > 0;
     }

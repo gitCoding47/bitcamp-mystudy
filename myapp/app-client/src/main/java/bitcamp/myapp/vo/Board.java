@@ -11,6 +11,7 @@ public class Board implements Serializable {
   private int no;
   private String title;
   private String content;
+  private User writer;
   private Date createdDate;
   private int viewCount;
 
@@ -24,12 +25,12 @@ public class Board implements Serializable {
   @Override
   public String toString() {
     return "Board{" +
-            "no=" + no +
-            ", title='" + title + '\'' +
-            ", content='" + content + '\'' +
-            ", createdDate=" + createdDate +
-            ", viewCount=" + viewCount +
-            '}';
+        "no=" + no +
+        ", title='" + title + '\'' +
+        ", content='" + content + '\'' +
+        ", createdDate=" + createdDate +
+        ", viewCount=" + viewCount +
+        '}';
   }
 
   @Override
@@ -87,5 +88,13 @@ public class Board implements Serializable {
 
   public void setViewCount(int viewCount) {
     this.viewCount = viewCount;
+  }
+
+  public User getWriter() {
+    return writer;
+  }
+
+  public void setWriter(User writer) {
+    this.writer = writer;
   }
 }
